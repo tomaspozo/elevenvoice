@@ -67,3 +67,69 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Orb Styling */
+.orb {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-orb {
+  animation: wave 0.4s infinite ease-in-out;
+}
+
+.animate-orb-slow {
+  animation: wave 2s infinite ease-in-out;
+}
+
+.orb-active {
+  background: radial-gradient(circle at center, #c7c7c7, #908e8e, #595959);
+}
+
+.orb-inactive {
+  background: radial-gradient(
+    circle at center,
+    rgba(200, 200, 200, 0.8),
+    rgba(150, 150, 150, 0.6),
+    rgba(100, 100, 100, 0.4)
+  );
+}
+
+/* Inner Gradient Layer for Waving Effect */
+.orb::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+
+  border-radius: 50%;
+  animation: wave-motion 6s infinite linear;
+}
+
+/* Keyframes for Waving Animation */
+@keyframes wave {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes wave-motion {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10px, 10px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
