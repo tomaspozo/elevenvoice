@@ -140,7 +140,7 @@ export function ProcessAudio({
             ),
           });
           console.log("FFmpeg loaded successfully");
-        } catch (e) {
+        } catch (e: any) {
           console.error("FFmpeg load error:", e);
           throw new Error(`Failed to initialize FFmpeg: ${e.message}`);
         }
@@ -151,7 +151,7 @@ export function ProcessAudio({
           const inputData = await fetchFile(audioBlob);
           await ffmpeg.writeFile("input.mp3", inputData);
           console.log("Input file written successfully");
-        } catch (e) {
+        } catch (e: any) {
           console.error("Write input file error:", e);
           throw new Error(`Failed to write input file: ${e.message}`);
         }
@@ -191,7 +191,7 @@ export function ProcessAudio({
               "output.mp3",
             ]);
             console.log("Audio segments processed successfully");
-          } catch (e) {
+          } catch (e: any) {
             console.error("Error processing audio segments:", e);
             throw new Error(`Failed to process audio segments: ${e.message}`);
           }
