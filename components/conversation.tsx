@@ -38,6 +38,7 @@ export function ConvAI({ userId }: { userId: string }) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   async function startConversation() {
+    console.log("Starting conversation");
     const hasPermission = await requestMicrophonePermission();
     if (!hasPermission) {
       alert("No permission");
@@ -45,6 +46,7 @@ export function ConvAI({ userId }: { userId: string }) {
     }
 
     const signedUrl = await getSignedUrl();
+    console.log("signedUrl", signedUrl);
 
     const conversation = await Conversation.startSession({
       signedUrl: signedUrl,
@@ -67,14 +69,24 @@ export function ConvAI({ userId }: { userId: string }) {
               user_id: userId,
             })
             .select("id")
-            .then(({ data, error }) => {
+            .then(async ({ data, error }) => {
               if (error) {
                 console.error(error);
                 alert("An error occurred during the conversation");
                 return;
               }
 
-              redirect(`/conversation/${data[0].id}`);
+              const conversationId = data[0].id;
+
+              // Start saving the audio
+              fetch(`/api/conversation/${conversationId}/save-audio`, {
+                method: "POST",
+              }).catch((error) => {
+                console.error("Failed to initiate audio save:", error);
+              });
+
+              // Redirect to conversation page
+              redirect(`/conversation/${conversationId}`);
             });
         }
       },
@@ -99,7 +111,7 @@ export function ConvAI({ userId }: { userId: string }) {
 
   return (
     <div className={"flex justify-center items-center gap-x-4"}>
-      <Card className={"rounded-3xl"}>
+      <Card>
         <CardContent>
           <CardHeader>
             <CardTitle className={"text-center"}>
@@ -113,7 +125,7 @@ export function ConvAI({ userId }: { userId: string }) {
           <div className={"flex flex-col gap-y-4 text-center"}>
             <div
               className={cn(
-                "orb my-16 mx-12",
+                "orb my-10 mx-12",
                 isSpeaking ? "animate-orb" : conversation && "animate-orb-slow",
                 isConnected ? "orb-active" : "orb-inactive"
               )}
@@ -121,7 +133,6 @@ export function ConvAI({ userId }: { userId: string }) {
 
             <Button
               variant={"outline"}
-              className={"rounded-full"}
               size={"lg"}
               disabled={conversation !== null && isConnected}
               onClick={startConversation}
@@ -130,7 +141,6 @@ export function ConvAI({ userId }: { userId: string }) {
             </Button>
             <Button
               variant={"outline"}
-              className={"rounded-full"}
               size={"lg"}
               disabled={conversation === null && !isConnected}
               onClick={endConversation}

@@ -1,17 +1,19 @@
 import { createClient } from "@/utils/supabase/server";
 import { ProcessAudio } from "@/components/process-audio";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function ConversationPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const supabase = await createClient();
 
   const { data: conversation, error } = await supabase
     .from("conversations")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !conversation) {
@@ -19,14 +21,18 @@ export default async function ConversationPage({
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
-      <div className="w-full max-w-2xl space-y-8">
-        <h1 className="text-2xl font-bold text-center">Processing Conversation</h1>
-        <ProcessAudio
-          conversationId={conversation.id}
-          elevenLabsId={conversation.elevenlabs_id}
-        />
-      </div>
+    <div className={"flex justify-center items-center gap-x-4"}>
+      <Card className={"rounded-3xl"}>
+        <CardHeader>
+          <CardTitle>Processing Conversation</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProcessAudio
+            conversationId={conversation.id}
+            elevenLabsId={conversation.elevenlabs_id}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -43,7 +43,7 @@ export default function RootLayout({
             <div className="flex flex-col flex-grow w-full items-center justify-center sm:px-4">
               <nav className="bg-background/90 sm:fixed w-full top-0 left-0 grid grid-cols-2 py-4 px-8">
                 <div className={"flex"}>
-                  <Link href={"/"} prefetch={true}>
+                  <Link href={"/"} prefetch={true} className="font-semibold">
                     ElevenVoice
                   </Link>
                 </div>

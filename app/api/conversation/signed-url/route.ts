@@ -9,6 +9,7 @@ export async function GET() {
             },
         );
 
+        console.log("signedUrlRequest", signedUrlRequest);
         return NextResponse.json({ signedUrl: signedUrlRequest.signed_url });
     } catch (error) {
         return NextResponse.json(
